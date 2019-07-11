@@ -1,0 +1,1 @@
+E:\leetcode\Math\Math\bin\Debug\Math.exe.config
