@@ -1,1 +1,6 @@
 E:\leetcode\Math\Math\bin\Debug\Math.exe.config
+E:\leetcode\Math\Math\bin\Debug\Math.exe
+E:\leetcode\Math\Math\bin\Debug\Math.pdb
+E:\leetcode\Math\Math\obj\Debug\Math.csprojResolveAssemblyReference.cache
+E:\leetcode\Math\Math\obj\Debug\Math.exe
+E:\leetcode\Math\Math\obj\Debug\Math.pdb
