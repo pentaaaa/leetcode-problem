@@ -11,8 +11,15 @@ namespace ArrayAndString
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            string max = solution.LongestPalindrome("babad");
-            print(max + "--max length:" + max.Length);
+            int[] nums = { -1, 0, 1 };
+            var list=solution.ThreeSum(nums);
+            foreach(var i in list)
+            {
+                foreach(var j in i)
+                {
+                    print(j);
+                }
+            }
             Console.ReadKey();
         }
 
@@ -43,9 +50,120 @@ namespace ArrayAndString
         /// <returns></returns>
         public IList<IList<int>> ThreeSum(int[] nums)
         {
-            IList<IList<int>> list = new List<IList<int>>();
             
+            int minus = -1;
+            int positive = -1;
+            IList<IList<int>> list = new List<IList<int>>();
+            if (nums.Length < 3)
+                return list;
             Array.Sort(nums);
+            //寻找正负分界点
+            for(int i = 0; i < nums.Length; i++)
+            {
+                if (i<nums.Length-1&&nums[i] < 0 && nums[i + 1] >= 0)
+                    minus = i;
+                if (i>0&&nums[i - 1] <= 0 && nums[i] > 0)
+                {
+                    positive = i;
+                    break;
+                }
+            }
+            print("minus:" + minus);
+            print("positive:" + positive);
+            //三个0
+            if (positive - minus > 3|| (nums[0] == nums[1] && nums[1] == nums[2] && nums[2] == 0))
+            {
+                List<int> ilist = new List<int>();
+                ilist.Add(0); ilist.Add(0); ilist.Add(0);
+                list.Add(ilist);
+            }
+            
+
+            //两负一正
+            if (minus >= 0&&positive!=-1)
+            {
+                for (int i = 0; i < minus; i++)
+                {
+                    if (i != 0 && nums[i] != nums[i - 1] || i == 0)
+                    {
+                        for (int j = i + 1; j <= minus; j++)
+                        {
+                            if (j > i + 1 && nums[j] != nums[j - 1] || j == i + 1)
+                            {
+                                for (int z = nums.Length - 1; z >= positive; z--)
+                                {
+                                    if (z < nums.Length - 1 && nums[z] != nums[z + 1] || z == nums.Length - 1)
+                                    {
+                                        if (nums[i] + nums[j] + nums[z] == 0)
+                                        {
+                                            IList<int> ilist = new List<int>();
+                                            ilist.Add(nums[i]); ilist.Add(nums[j]); ilist.Add(nums[z]);
+                                            list.Add(ilist);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //一正一负
+            if (minus >=0 &&  positive != -1)
+            {
+                print("1正1负");
+                if (positive - minus > 1)
+                {
+                    for (int i = 0; i <= minus; i++)
+                    {
+                        if (i > 0 && nums[i] != nums[i - 1] || i == 0)
+                        {
+                            for (int j = nums.Length - 1; j >= positive; j--)
+                            {
+                                if (j < nums.Length - 1 && nums[j] != nums[j + 1] || j == nums.Length - 1)
+                                {
+                                    if (nums[i] + nums[j] == 0)
+                                    {
+                                        IList<int> ilist = new List<int>();
+                                        ilist.Add(nums[i]); ilist.Add(0); ilist.Add(nums[j]);
+                                        list.Add(ilist);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //一负两正
+            if (minus > 0  && positive != -1)
+            {
+                for (int i = 0; i <= minus; i++)
+                {
+                    if (i == 0 || i > 0 && nums[i] != nums[i - 1])
+                    {
+                        for (int j = nums.Length - 1; j > positive; j--)
+                        {
+                            if (j == nums.Length - 1 || j < nums.Length - 1 && nums[j] != nums[j + 1])
+                            {
+                                for (int z = j - 1; z >= positive; z--)
+                                {
+                                    if (z == j - 1 || z < j - 1 && nums[z] != nums[z + 1])
+                                    {
+                                        if (nums[i] + nums[j] + nums[z] == 0)
+                                        {
+                                            List<int> ilist = new List<int>();
+                                            ilist.Add(nums[i]); ilist.Add(nums[j]); ilist.Add(nums[z]);
+                                            list.Add(ilist);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             
             return list;
         }
@@ -115,19 +233,7 @@ namespace ArrayAndString
             }
             return list;
         }
-        public bool isSameStr(Dictionary<char,int> dic1,Dictionary<char,int> dic2)
-        {
-            if (dic1.Count != dic2.Count)
-                return false;
-            foreach(var kvp in dic1)
-            {
-                if (!dic2.ContainsKey(kvp.Key))
-                    return false;
-                if (dic2[kvp.Key] != kvp.Value)
-                    return false;
-            }
-            return true;
-        }
+        
 
         //给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
         public int LengthOfLongestSubstring(string s)
@@ -172,13 +278,9 @@ namespace ArrayAndString
             }
             for(int i = 0; i < s.Length-1; i++)
             {
-                if ((s[i] == s[i + 1])||(i>0&&(s[i - 1] == s[i + 1])))//偶数回文开始验证
+                if (s[i] == s[i + 1])//偶数回文开始验证
                 {
                     int x = i, y = i + 1;
-                    if(i > 0 && (s[i - 1] == s[i + 1]))
-                    {
-                        x = i - 1;
-                    }
                     while (x > -1 && y < s.Length)
                     {
                         if (s[x] != s[y])
@@ -199,8 +301,48 @@ namespace ArrayAndString
                         print("new string:" + max);
                     }
                 }
+                if(i > 0 && (s[i - 1] == s[i + 1]))
+                {
+                    int x = i-1, y = i + 1;
+                    while (x > -1 && y < s.Length)
+                    {
+                        if (s[x] != s[y])
+                            break;
+                        x--; y++;
+                    }
+                    x++; y--;
+                    if ((y - x + 1) > max.Length)
+                    {
+                        print("a new max string:");
+                        char[] c = new char[y - x + 1];
+                        for (int j = 0; j < c.Length; j++)
+                        {
+                            c[j] = s[x + j];
+                            print(j + "word:" + c[i]);
+                        }
+                        max = new string(c);
+                        print("new string:" + max);
+                    }
+                }
             }
             return max;
+        }
+        //给定一个未排序的数组，判断这个数组中是否存在长度为 3 的递增子序列。
+        public bool IncreasingTriplet(int[] nums)
+        {
+            if (nums.Length < 3)
+                return false;
+            int num1=int.MaxValue, num2=int.MaxValue;
+            for(int i = 0; i < nums.Length; i++)
+            {
+                if (nums[i] > num2 && num2 > num1)
+                    return true;
+                if (nums[i] < num1)
+                    num1 = nums[i];
+                else if (nums[i] > num1 && nums[i] < num2)
+                    num2 = nums[i];
+            }
+            return false;
         }
 
 
