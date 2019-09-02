@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Linked
 {
@@ -11,14 +7,32 @@ namespace Linked
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            ListNode l1 = new ListNode(2);
-            l1.next = new ListNode(4);
-            l1.next.next = new ListNode(3);
-            ListNode l2 = new ListNode(5);
-            l2.next = new ListNode(6);
-            l2.next.next = new ListNode(4);
+            //ListNode l1 = new ListNode(9);
+            //ListNode l2 = new ListNode(1);
+            //ListNode end = l2.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            //end = end.next = new ListNode(9);
+            ListNode l1 = new ListNode(1);
+            ListNode l2 = new ListNode(9);
+            l2.next = new ListNode(9);
+            ListNode solulist=
             solution.AddTwoNumbers(l1, l2);
+            while (solulist != null)
+            {
+                print(solulist.val);
+                solulist = solulist.next;
+            }
             Console.ReadKey();
+        }
+        public static void print(int i)
+        {
+            Console.WriteLine(i);
         }
     }
     public class Solution
@@ -30,35 +44,40 @@ namespace Linked
         //您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
         public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
         {
-            int x = 0, y = 0;
+            double x = 0, y = 0;
             int i = 0;
+            print("int max:" + (int)Math.Pow(10, 9) * 9);
             while (l1 != null)
             {
-                x += (int)Math.Pow(10, i)*l1.val;
+                x += Math.Pow(10, i)*l1.val;
                 i++;
                 l1 = l1.next;
             }
             i = 0;
             while (l2 != null)
             {
-                y += (int)Math.Pow(10, i)*l2.val;
+                print("10^9:" + Math.Pow(10, 9)*9);
+                y += Math.Pow(10, i)*l2.val;
                 i++;
                 l2 = l2.next;
+                print("y=" + y);
             }
-            int z = x + y;
+            double z = x + y;
             print("x:" + x);
             print("y:" + y);
             print("z:" + z);
-            ListNode head = new ListNode(z % 10);
+            print(100 % 10);
+            ListNode head = new ListNode((int)(z % 10));
             z = z / 10;
-            if (z == 0)
+            if (z < 1)
                 return head;
-            ListNode next = new ListNode(z % 10);
+            ListNode next = new ListNode((int)(z % 10));
             head.next = next;
-            while (z/10 != 0)
+            while (z/10 >=1)
             {
+                //print("z/10:"+z / 10);
                 z = z / 10;
-                next.next = new ListNode(z % 10);
+                next.next = new ListNode((int)(z % 10));
                 next = next.next;
             }
             return head;
@@ -75,6 +94,10 @@ namespace Linked
         public static void print(string str)
         {
             Console.WriteLine(str);
+        }
+        public static void print(double d)
+        {
+            Console.WriteLine(d);
         }
     }
     public class ListNode
