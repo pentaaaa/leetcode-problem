@@ -7,22 +7,13 @@ namespace Linked
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            //ListNode l1 = new ListNode(9);
-            //ListNode l2 = new ListNode(1);
-            //ListNode end = l2.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            //end = end.next = new ListNode(9);
-            ListNode l1 = new ListNode(1);
-            ListNode l2 = new ListNode(9);
-            l2.next = new ListNode(9);
-            ListNode solulist=
-            solution.AddTwoNumbers(l1, l2);
+            ListNode node = new ListNode(1);
+            node.next = new ListNode(2);
+            node.next.next = new ListNode(3);
+            node.next.next.next = new ListNode(4);
+            node.next.next.next.next = new ListNode(5);
+            ListNode solulist =
+            solution.OddEvenList(node);
             while (solulist != null)
             {
                 print(solulist.val);
@@ -34,6 +25,21 @@ namespace Linked
         {
             Console.WriteLine(i);
         }
+        public static void print(double d)
+        {
+            Console.WriteLine(d);
+        }
+        public static void print(string s)
+        {
+            Console.WriteLine(s);
+        }
+        public static void print(bool b)
+        {
+            if (b)
+                Console.WriteLine("true");
+            else
+                Console.WriteLine("false");
+        }
     }
     public class Solution
     {
@@ -44,42 +50,77 @@ namespace Linked
         //您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
         public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
         {
-            double x = 0, y = 0;
-            int i = 0;
-            print("int max:" + (int)Math.Pow(10, 9) * 9);
-            while (l1 != null)
+            int add = 0;
+            ListNode node = null;
+            ListNode head = null;
+            while (l1 != null || l2 != null)
             {
-                x += Math.Pow(10, i)*l1.val;
-                i++;
-                l1 = l1.next;
+                int x = l1 == null ? 0 : l1.val;
+                int y = l2 == null ? 0 : l2.val;
+                int z = x + y + add;
+                if (z > 9)
+                {
+                    z -= 10;
+                    add = 1;
+                }
+                else
+                    add = 0;
+                if (head == null)
+                {
+                    head = new ListNode(z);
+                    node = head;
+                }
+                else
+                {
+                    node.next = new ListNode(z);
+                    node = node.next;
+                }
+                if (l1 != null)
+                    l1 = l1.next;
+                if (l2 != null)
+                    l2 = l2.next;
             }
-            i = 0;
-            while (l2 != null)
+            if (add == 1)
+                node.next = new ListNode(1);
+            return head;
+        }
+
+        //给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
+        //请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
+        public ListNode OddEvenList(ListNode head)
+        {
+            bool odd = true;
+            ListNode node = head;
+            ListNode node2 = null;
+            ListNode head2 = null;
+            while (node != null)
             {
-                print("10^9:" + Math.Pow(10, 9)*9);
-                y += Math.Pow(10, i)*l2.val;
-                i++;
-                l2 = l2.next;
-                print("y=" + y);
+                print("while:" + node.val);
+                if (odd&&node.next!=null&&node.next.next!=null)
+                {
+                    node.next = node.next.next;
+                }
+                else if(!odd)
+                {
+                    node.next = null;
+                    print("even");
+                    if (head2 == null)
+                    {
+                        head2 = node;print(head2.val);
+                        node2 = head2;
+                    }
+                    else
+                    {
+                        node2.next = node;
+                        node2 = node2.next;
+                    }
+                }
+                if (node.next == null)
+                    break;
+                node = node.next;
+                odd = !odd;
             }
-            double z = x + y;
-            print("x:" + x);
-            print("y:" + y);
-            print("z:" + z);
-            print(100 % 10);
-            ListNode head = new ListNode((int)(z % 10));
-            z = z / 10;
-            if (z < 1)
-                return head;
-            ListNode next = new ListNode((int)(z % 10));
-            head.next = next;
-            while (z/10 >=1)
-            {
-                //print("z/10:"+z / 10);
-                z = z / 10;
-                next.next = new ListNode((int)(z % 10));
-                next = next.next;
-            }
+            //node.next = head2;
             return head;
         }
 
