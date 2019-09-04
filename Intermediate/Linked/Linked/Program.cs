@@ -7,11 +7,9 @@ namespace Linked
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            ListNode node = new ListNode(1);
-            node.next = new ListNode(2);
-            node.next.next = new ListNode(3);
-            node.next.next.next = new ListNode(4);
-            node.next.next.next.next = new ListNode(5);
+            ListNode node = new ListNode(2);
+            ListNode node2 = new ListNode(2);
+            print(node == node2);
             ListNode solulist =
             solution.OddEvenList(node);
             while (solulist != null)
@@ -89,13 +87,25 @@ namespace Linked
         //请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
         public ListNode OddEvenList(ListNode head)
         {
+            if (head == null)
+                return null;
             bool odd = true;
             ListNode node = head;
             ListNode node2 = null;
             ListNode head2 = null;
-            while (node != null)
+            ListNode Temp = head;
+            ListNode oddend = null;
+            while (Temp != null)
             {
-                print("while:" + node.val);
+                node = Temp;
+                Temp = Temp.next;
+                if (odd && node.next == null)
+                    oddend = node;
+                if (odd && node.next != null && node.next.next == null)
+                {
+                    node.next = null;
+                    oddend = node;
+                }
                 if (odd&&node.next!=null&&node.next.next!=null)
                 {
                     node.next = node.next.next;
@@ -103,10 +113,9 @@ namespace Linked
                 else if(!odd)
                 {
                     node.next = null;
-                    print("even");
                     if (head2 == null)
                     {
-                        head2 = node;print(head2.val);
+                        head2 = node;
                         node2 = head2;
                     }
                     else
@@ -115,15 +124,60 @@ namespace Linked
                         node2 = node2.next;
                     }
                 }
-                if (node.next == null)
-                    break;
-                node = node.next;
                 odd = !odd;
             }
-            //node.next = head2;
+            oddend.next = head2;
             return head;
         }
 
+        //编写一个程序，找到两个单链表相交的起始节点。
+        public ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+        {
+            if (headA == null || headB == null)
+                return null;
+            int x = 0, y = 0;
+            ListNode cpheadA = headA;
+            ListNode cpheadB = headB;
+            while (cpheadA != null)
+            {
+                x++;
+                cpheadA = cpheadA.next;
+            }
+            while (cpheadB != null)
+            {
+                y++;
+                cpheadB = cpheadB.next;
+            }
+            if (x >= y)
+            {
+                for(int i = 0; i < x - y; i++)
+                {
+                    headA = headA.next;
+                }
+                while (headA != null)
+                {
+                    if (headA == headB)
+                        return headA;
+                    headA = headA.next;
+                    headB = headB.next;
+                }
+            }
+            else
+            {
+                for (int i = 0; i <y-x; i++)
+                {
+                    headB = headB.next;
+                }
+                while (headA != null)
+                {
+                    if (headA == headB)
+                        return headA;
+                    headA = headA.next;
+                    headB = headB.next;
+                }
+            }
+            return null;
+        }
 
 
 
